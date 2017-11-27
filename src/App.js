@@ -25,8 +25,8 @@ class App extends Component {
 
     socket.onmessage = (e) => {
       console.log(e.data);
-      let data = JSON.parse(e.data);
-      if (data.url) {
+      if (e.data.url) {
+        let data = JSON.parse(e.data);
         this.setState({
           loading: false,
           downloadUrl: data.url
@@ -64,7 +64,7 @@ class App extends Component {
           <input value={this.state.url} onChange={evt => this.updateUrl(evt)}/>
           <button
             onClick={() => {
-              this.setState({ loading: true });
+              this.setState({ loading: true, downloadUrl: undefined });
               socket.send(`/build${JSON.stringify(this.state.build)}`);
             }}
           >
@@ -75,7 +75,14 @@ class App extends Component {
             this.state.downloadUrl ? 
             <a href={this.state.downloadUrl}>Download</a>
             :
-            <div></div>
+            <div>
+              {
+                this.state.loading ?
+                <p>Loading...</p>
+                :
+                <div></div>
+              }
+            </div>
           }
       </div>
     );
