@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const url = 'ws://url2app-service.herokuapp.com//ws';
+const url = 'wss://url2app-service.herokuapp.com/ws';
 const socket = new WebSocket(url);
 
 class App extends Component {
