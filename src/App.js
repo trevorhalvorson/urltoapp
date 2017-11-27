@@ -25,7 +25,7 @@ class App extends Component {
 
     socket.onmessage = (e) => {
       console.log(e.data);
-      if (e.data.url) {
+      if (e.data.includes('url')) {
         let data = JSON.parse(e.data);
         this.setState({
           loading: false,
