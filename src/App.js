@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-const url = 'wss://url2app-service.herokuapp.com/ws';
-const socket = new WebSocket(url);
+const url = process.env.REACT_APP_WS_URL;
+var socket;
 
 class App extends Component {
   constructor(props) {
@@ -17,8 +17,11 @@ class App extends Component {
         version: '1.0.0'
       }
     }
+    this.setupSocket();
   }
-  componentWillMount() {
+
+  setupSocket = () => {
+    socket = new WebSocket(url)
     socket.onopen = () => {
       console.log('open');
     }
@@ -40,8 +43,9 @@ class App extends Component {
     }
 
     // A connection was closed
-    socket.onclose = (code, reason) => {
-      console.log(code, reason);
+    socket.onclose = (event) => {
+      console.log(event);
+      this.setupSocket();
     }
   }
 
@@ -63,8 +67,10 @@ class App extends Component {
         <p className="App-intro">
           <input value={this.state.url} onChange={evt => this.updateUrl(evt)}/>
           <button
+            disabled={this.state.loading}
             onClick={() => {
               this.setState({ loading: true, downloadUrl: undefined });
+
               socket.send(`/build${JSON.stringify(this.state.build)}`);
             }}
           >
